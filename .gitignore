@@ -63,3 +63,5 @@ build/
 # Logs de crash da JVM
 hs_err_pid*
 replay_pid*
+
+src/main/webapp/META-INF/MANIFEST.MF
