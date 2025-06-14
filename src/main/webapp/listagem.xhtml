@@ -2,85 +2,106 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
 <h:head>
     <title>Listagem de Tarefas</title>
-    <h:outputStylesheet>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background-color: #f9f9f9;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            background-color: white;
-        }
-
-        th, td {
-            padding: 12px 16px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        a {
-            text-decoration: none;
-            color: #007BFF;
-            margin-right: 10px;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-    </h:outputStylesheet>
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@6.0.1/primeicons.css"/>
+    <h:outputStylesheet library="primefaces" name="components.css"/>
+    <h:outputStylesheet library="css" name="style.css"/>
 </h:head>
 
 <h:body>
-    <h1>Gerenciador de Tarefas</h1>
+    <div class="container">
+        <h1>Listagem de Tarefas</h1>
+        <h:form id="formFiltro">
 
-    <h:form>
-        <h:dataTable value="#{tarefaController.tarefas}" var="tarefa" styleClass="tabela-tarefas">
+            <!-- Seção de Filtros -->
+            <div class="filter-grid">
+                <!-- Linha 1: Número -->
+                <h:outputLabel for="numero" value="Número:" styleClass="label"/>
+                <h:inputText id="numero" value="#{tarefaController.filtroNumero}" styleClass="form-control"/>
 
-            <h:column>
-                <f:facet name="header">Número</f:facet>
-                <h:outputText value="#{tarefa.numero}" />
-            </h:column>
+                <!-- Linha 2: Título/Descrição -->
+                <h:outputLabel for="tituloDescricao" value="Título/Descrição:" styleClass="label"/>
+                <h:inputText id="tituloDescricao" value="#{tarefaController.filtroTituloDescricao}"
+                             styleClass="form-control"/>
 
-            <h:column>
-                <f:facet name="header">Título</f:facet>
-                <h:outputText value="#{tarefa.titulo}" />
-            </h:column>
+                <!-- Linha 3: Responsável e Situação -->
+                <div class="input-group">
+                    <div class="input-field">
+                        <h:outputLabel for="responsavel" value="Responsável:" styleClass="label"/>
+                        <p:autoComplete id="responsavel"
+                                        value="#{tarefaController.filtroResponsavel}"
+                                        completeMethod="#{colaboradorController.buscarColaboradores}" var="colab"
+                                        itemLabel="#{colab.nome}"
+                                        itemValue="#{colab}"
+                                        converter="colaboradorConverter"
+                                        forceSelection="false" dropdown="true" minQueryLength="0" queryDelay="300"
+                                        placeholder="Digite para buscar ou selecione"
+                        />
+                    </div>
 
-            <h:column>
-                <f:facet name="header">Responsável</f:facet>
-                <h:outputText value="#{tarefa.responsavel}" />
-            </h:column>
+                    <div class="input-field input-select">
+                        <h:outputLabel for="situacao" value="Situação:" styleClass="label"/>
+                        <p:selectOneMenu id="situacao" value="#{tarefaController.filtroSituacao}"
+                                         styleClass="form-control"
+                                         converter="omnifaces.SelectItemsConverter">
+                            <f:selectItem itemLabel="Todas" itemValue=""/>
+                            <f:selectItem itemLabel="Em andamento" itemValue="EM_ANDAMENTO"/>
+                            <f:selectItem itemLabel="Concluída" itemValue="CONCLUIDA"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
 
-            <h:column>
-                <f:facet name="header">Situação</f:facet>
-                <h:outputText value="#{tarefa.situacao}" />
-            </h:column>
+                <!-- Linha 4: Botões -->
+                <div class="button-group">
+                    <h:commandButton value="Buscar Tarefas" action="#{tarefaController.filtrar}"
+                                     styleClass="btn btn-primary"/>
+                    <h:commandButton value="Cadastrar Nova Tarefa" action="#{tarefaController.navegarParaCadastro}"
+                                     styleClass="btn btn-secondary"/>
+                </div>
 
-            <h:column>
-                <f:facet name="header">Ações</f:facet>
-                <h:commandLink value="Editar" action="#{tarefaController.editar(tarefa.numero)}" />
-                <h:outputText value=" | " />
-                <h:commandLink value="Excluir" action="#{tarefaController.excluir(tarefa.numero)}" />
-                <h:outputText value=" | " />
-                <h:commandLink value="Concluir" action="#{tarefaController.concluir(tarefa.numero)}" />
-            </h:column>
+                <p:messages id="feedbackMessages" showDetail="true" showSummary="false" autoUpdate="true"
+                            closable="true"/>
+            </div>
 
-        </h:dataTable>
-    </h:form>
+            <!-- Tabela de Dados com paginação -->
+            <p:dataTable value="#{tarefaController.tarefas}" var="tarefa" paginator="true" rows="10"
+                         styleClass="tabela-tarefas">
+
+                <p:column headerText="Número">
+                    <h:outputText value="#{tarefa.numero}"/>
+                </p:column>
+
+                <p:column headerText="Título">
+                    <h:outputText value="#{tarefa.titulo}"/>
+                </p:column>
+
+                <p:column headerText="Responsável">
+                    <h:outputText value="#{tarefa.responsavel.nome}"/>
+                </p:column>
+
+                <p:column headerText="Ações" styleClass="actions-column">
+                    <h:outputLink value="cadastro_tarefas.xhtml?id=#{tarefa.numero}"
+                                  styleClass="action-link">Editar</h:outputLink>
+                    <h:outputText value=" | " styleClass="action-separator"/>
+                    <h:commandLink value="Excluir" styleClass="action-link" action="#{tarefaController.excluir}"
+                                   onclick="return confirm('Confirma a exclusão da tarefa?');">
+                        <f:setPropertyActionListener target="#{tarefaController.idTarefa}" value="#{tarefa.numero}"/>
+                    </h:commandLink>
+                    <h:outputText value=" | " styleClass="action-separator"
+                                  rendered="#{tarefa.situacao == 'EM_ANDAMENTO'}"/>
+                    <h:commandLink value="Concluir" styleClass="action-link" action="#{tarefaController.concluir}"
+                                   rendered="#{tarefa.situacao == 'EM_ANDAMENTO'}">
+                        <f:setPropertyActionListener target="#{tarefaController.idTarefa}" value="#{tarefa.numero}"/>
+                    </h:commandLink>
+                </p:column>
+
+            </p:dataTable>
+
+        </h:form>
+    </div>
 </h:body>
 </html>
