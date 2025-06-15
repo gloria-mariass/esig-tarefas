@@ -16,6 +16,12 @@ COPY src ./src
 # Compila o projeto e empacota o WAR.
 RUN mvn clean package -DskipTests
 
+# LINHA DE DEBUG: Garante que qualquer falha de comando irá parar o build do Docker.
+RUN set -e
+
+# LINHA DE DEBUG: Lista o conteúdo do diretório target para verificar o WAR.
+RUN ls -l /app/target/
+
 # Use uma imagem base de Tomcat com JDK 11
 FROM tomcat:9-jdk11-temurin
 
