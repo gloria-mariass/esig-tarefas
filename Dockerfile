@@ -1,3 +1,21 @@
+# Maven 3.9.9 com JDK 11
+FROM maven:3.9.9-jdk11 AS builder
+
+# Isso serve como a raiz do seu projeto Maven para o build.
+WORKDIR /app
+
+# Copia o arquivo pom.xml
+COPY pom.xml .
+
+# Baixa as dependências do Maven
+RUN mvn dependency:go-offline -B
+
+# Copia o código fonte do projeto para o contêiner.
+COPY src ./src
+
+# Compila o projeto e empacota o WAR.
+RUN mvn clean package -DskipTests
+
 # Use uma imagem base de Tomcat com JDK 11
 FROM tomcat:9-jdk11-temurin
 
