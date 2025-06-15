@@ -48,15 +48,13 @@
                 </div>
 
                 <div class="input-field">
-                    <h:outputLabel for="deadline" value="Deadline:" styleClass="label"/>
-                    <h:inputText id="deadline"
-                                 value="#{tarefaController.tarefa.deadline}"
-                                 styleClass="form-control"
-                                 required="true"
-                                 requiredMessage="O deadline é obrigatório.">
-                        <f:converter converterId="localDateTimeConverter" />
-                        <f:passThroughAttribute name="type" value="date"/>
-                    </h:inputText>
+                    <h:outputLabel for="deadline" value="Prazo:" styleClass="label"/>
+                    <p:calendar id="deadline"
+                                value="#{tarefaController.tarefa.deadline}"
+                                pattern="dd/MM/yyyy HH:mm" locale="pt_BR" navigator="true" showOn="button"
+                                required="true"
+                                requiredMessage="O prazo é obrigatório.">
+                        <f:converter converterId="localDateTimeConverter"/> </p:calendar>
                 </div>
 
                 <div class="input-field">

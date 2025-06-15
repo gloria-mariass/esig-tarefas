@@ -17,15 +17,15 @@ public class TarefaDAO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public void salvar(Tarefa tarefa) {
-        if (tarefa.getDeadline() != null) {
-            tarefa.setDeadline(
-                    tarefa.getDeadline()
-                            .withHour(12)
-                            .withMinute(0)
-                            .withSecond(0)
-                            .withNano(0)
-            );
-        }
+//        if (tarefa.getDeadline() != null) {
+//            tarefa.setDeadline(
+//                    tarefa.getDeadline()
+//                            .withHour(12)
+//                            .withMinute(0)
+//                            .withSecond(0)
+//                            .withNano(0)
+//            );
+//        }
 
         EntityManager em = JPAUtil.getEntityManager();
         try {
@@ -79,7 +79,7 @@ public class TarefaDAO implements Serializable {
                 jpql.append("AND t.numero = :numero ");
             }
             if (tituloOuDescricao != null && !tituloOuDescricao.trim().isEmpty()) {
-                jpql.append("AND (LOWER(t.titulo) LIKE LOWER(:tituloOuDescriptor) OR LOWER(t.descricao) LIKE LOWER(:tituloOuDescricao)) ");
+                jpql.append("AND (LOWER(t.titulo) LIKE LOWER(:tituloOuDescriptor) OR LOWER(t.descricao) LIKE LOWER(:tituloOuDescriptor)) ");
             }
             if (responsavel != null) {
                 jpql.append("AND t.responsavel = :responsavel ");
@@ -96,7 +96,7 @@ public class TarefaDAO implements Serializable {
                 query.setParameter("numero", numero);
             }
             if (tituloOuDescricao != null && !tituloOuDescricao.trim().isEmpty()) {
-                query.setParameter("tituloOuDescricao", "%" + tituloOuDescricao + "%");
+                query.setParameter("tituloOuDescriptor", "%" + tituloOuDescricao + "%");
             }
             if (responsavel != null) {
                 query.setParameter("responsavel", responsavel);

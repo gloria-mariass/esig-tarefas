@@ -429,3 +429,19 @@ body .ui-inputfield.ui-state-hover {
     font-size: 1.2em;
     display: block !important;
 }
+
+.ui-calendar {
+    width: 100% !important;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: flex;
+    background-color: #fff;
+    overflow: hidden;
+    position: relative;
+}
+
+.ui-calendar .ui-inputfield {
+    flex-grow: 1;
+}

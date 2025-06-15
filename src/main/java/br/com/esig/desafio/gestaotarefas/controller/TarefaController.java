@@ -5,6 +5,7 @@ import br.com.esig.desafio.gestaotarefas.modelo.Colaborador;
 import br.com.esig.desafio.gestaotarefas.modelo.Prioridade;
 import br.com.esig.desafio.gestaotarefas.modelo.Situacao;
 import br.com.esig.desafio.gestaotarefas.modelo.Tarefa;
+import org.primefaces.event.SelectEvent;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -30,7 +31,7 @@ public class TarefaController implements Serializable {
     private List<Tarefa> tarefas;
     private Tarefa tarefa;
     private Long idTarefa;
-
+    private Tarefa tarefaSelecionada;
     private Long filtroNumero;
     private String filtroTituloDescricao;
     private Colaborador filtroResponsavel;
@@ -154,6 +155,10 @@ public class TarefaController implements Serializable {
         return "cadastro_tarefas.xhtml?faces-redirect=true";
     }
 
+    public void onRowSelect(SelectEvent<Tarefa> event) {
+        this.tarefa = event.getObject();
+    }
+
     // --- GETTERS E SETTERS ---
 
     public List<Tarefa> getTarefas() {
@@ -210,5 +215,13 @@ public class TarefaController implements Serializable {
 
     public void setFiltroSituacao(String filtroSituacao) {
         this.filtroSituacao = filtroSituacao;
+    }
+
+    public Tarefa getTarefaSelecionada() {
+        return tarefaSelecionada;
+    }
+
+    public void setTarefaSelecionada(Tarefa tarefaSelecionada) {
+        this.tarefaSelecionada = tarefaSelecionada;
     }
 }

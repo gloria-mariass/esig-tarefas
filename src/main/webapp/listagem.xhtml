@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
     <title>Listagem de Tarefas</title>
@@ -69,7 +70,13 @@
 
             <!-- Tabela de Dados com paginação -->
             <p:dataTable value="#{tarefaController.tarefas}" var="tarefa" paginator="true" rows="10"
-                         styleClass="tabela-tarefas">
+                         styleClass="tabela-tarefas"
+                         selectionMode="single"
+                         rowKey="#{tarefa.numero}"
+                         selection="#{tarefaController.tarefaSelecionada}">
+                <p:ajax event="rowSelect"
+                        listener="#{tarefaController.onRowSelect}"
+                        update="@form @(.modal-detalhes-conteudo)" oncomplete="PF('detalhesModal').show();"/>
 
                 <p:column headerText="Número">
                     <h:outputText value="#{tarefa.numero}"/>
@@ -94,7 +101,8 @@
                     <h:outputText value=" | " styleClass="action-separator"
                                   rendered="#{tarefa.situacao == 'EM_ANDAMENTO'}"/>
                     <h:commandLink value="Concluir" styleClass="action-link" action="#{tarefaController.concluir}"
-                                   rendered="#{tarefa.situacao == 'EM_ANDAMENTO'}">
+                                   rendered="#{tarefa.situacao == 'EM_ANDAMENTO'}"
+                                   onclick="return confirm('Confirma a conclusão da tarefa?');">
                         <f:setPropertyActionListener target="#{tarefaController.idTarefa}" value="#{tarefa.numero}"/>
                     </h:commandLink>
                 </p:column>
@@ -102,6 +110,8 @@
             </p:dataTable>
 
         </h:form>
+
+        <ui:include src="/WEB-INF/includes/modalDetalhesTarefa.xhtml"/>
     </div>
 </h:body>
 </html>
