@@ -16,12 +16,21 @@
 
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.jsf</url-pattern>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
         <welcome-file>listagem.xhtml</welcome-file>
     </welcome-file-list>
+
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>client</param-value>
+    </context-param>
+
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/listagem.xhtml</location>
+    </error-page>
 
 </web-app>

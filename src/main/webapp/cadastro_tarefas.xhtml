@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <f:metadata>
+        <f:viewParam name="id" value="#{tarefaController.idTarefa}"/>
+        <f:viewAction action="#{tarefaController.carregarTarefaParaEdicao}"/>
+    </f:metadata>
+    <title>#{empty tarefaController.tarefa.numero ? 'Cadastro de Tarefa' : 'Edição de Tarefa'}</title>
+    <link rel="stylesheet" href="https://unpkg.com/primeicons@6.0.1/primeicons.css"/>
+    <h:outputStylesheet library="primefaces" name="components.css"/>
+    <h:outputStylesheet library="css" name="style.css"/>
+</h:head>
+
+<h:body>
+    <div class="container">
+        <h1>#{empty tarefaController.tarefa.numero ? 'Cadastrar Tarefa' : 'Editar Tarefa'}</h1>
+
+        <h:form id="formCadastro">
+            <div class="form-grid">
+                <div class="form-section-full-width">
+                    <div class="input-field">
+                        <h:outputLabel for="titulo" value="Título:" styleClass="label"/>
+                        <h:inputText id="titulo" value="#{tarefaController.tarefa.titulo}" styleClass="form-control"
+                                     required="true" requiredMessage="O título é obrigatório."
+                                     validatorMessage="Título inválido.">
+                        </h:inputText>
+                    </div>
+                    <div class="input-field">
+                        <h:outputLabel for="descricao" value="Descrição:" styleClass="label"/>
+                        <h:inputTextarea id="descricao" value="#{tarefaController.tarefa.descricao}"
+                                         styleClass="form-control form-control-area"/>
+                    </div>
+                </div>
+
+                <div class="input-field input-select">
+                    <h:outputLabel for="prioridade" value="Prioridade:" styleClass="label"/>
+                    <p:selectOneMenu id="prioridade" value="#{tarefaController.tarefa.prioridade}"
+                                     styleClass="form-control"
+                                     converter="omnifaces.SelectItemsConverter">
+                        <f:selectItem itemLabel="Selecione..." itemValue="#{null}"/>
+                        <f:selectItems value="#{tarefaController.prioridades}"/>
+                    </p:selectOneMenu>
+                </div>
+
+                <div class="input-field">
+                    <h:outputLabel for="deadline" value="Prazo:" styleClass="label"/>
+                    <p:calendar id="deadline"
+                                value="#{tarefaController.tarefa.deadline}"
+                                pattern="dd/MM/yyyy HH:mm" locale="pt_BR" navigator="true" showOn="button"
+                                required="true"
+                                requiredMessage="O prazo é obrigatório.">
+                        <f:converter converterId="localDateTimeConverter"/> </p:calendar>
+                </div>
+
+                <div class="input-field">
+                    <h:outputLabel for="responsavel" value="Responsável:" styleClass="label"/>
+                    <p:autoComplete id="responsavel"
+                                    value="#{tarefaController.tarefa.responsavel}"
+                                    completeMethod="#{colaboradorController.buscarColaboradores}" var="colab"
+                                    itemLabel="#{colab.nome}"
+                                    itemValue="#{colab}"
+                                    converter="colaboradorConverter"
+                                    forceSelection="false" dropdown="true" minQueryLength="0" queryDelay="300"
+                                    required="true" requiredMessage="O responsável é obrigatório."
+                                    placeholder="Selecione um colaborador responsável"
+                    />
+                </div>
+
+                <div class="button-group" style="display:flex; justify-content:flex-end; gap:10px; margin-top:1em;">
+                    <h:commandButton value="Salvar" action="#{tarefaController.salvar}" styleClass="btn btn-primary"/>
+                    <h:button value="Cancelar" outcome="listagem.xhtml?faces-redirect=true"
+                              styleClass="btn btn-secondary"/>
+                </div>
+            </div>
+
+            <h:messages styleClass="mensagens-erro" layout="list"/>
+        </h:form>
+    </div>
+</h:body>
+</html>
