@@ -18,7 +18,7 @@ public class Colaborador implements Serializable {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
     @OneToMany(mappedBy = "responsavel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
