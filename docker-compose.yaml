@@ -12,6 +12,28 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres_user -d gestao_tarefas_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gestao-tarefas-app
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_HOST: postgres_db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: gestao_tarefas_db
+      DATABASE_USER: postgres_user
+      DATABASE_PASSWORD: postgres_pass
+    depends_on:
+      postgres_db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
