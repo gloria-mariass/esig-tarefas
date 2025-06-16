@@ -5,7 +5,7 @@ build/
 !**/src/test/**/target/
 !**/src/main/**/build/
 !**/src/test/**/build/
-!/target/gestao-tarefas.war
+# !/target/gestao-tarefas.war
 
 # Maven Wrapper
 !.mvn/wrapper/maven-wrapper.jar
