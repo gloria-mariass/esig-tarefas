@@ -1,5 +1,5 @@
 # Maven 3.9.9 com JDK 11
-FROM maven:3.9.9-jdk11 AS builder
+FROM maven:3.9.6-eclipse-temurin-11 AS builder
 
 # Isso serve como a raiz do seu projeto Maven para o build.
 WORKDIR /app
@@ -33,7 +33,7 @@ RUN rm -rf webapps/*
 
 # Copia o arquivo .war da sua aplicação para o diretório webapps do Tomcat.
 # A pasta "target" é criada pelo Maven durante o build.
-COPY target/gestao-tarefas.war webapps/ROOT.war
+COPY --from=builder /app/target/gestao-tarefas.war webapps/ROOT.war
 
 # (Opcional) Configura opções JVM, como o charset e limites de memória.
 ENV JAVA_OPTS="-Dfile.encoding=UTF-8 -Xms256m -Xmx512m"
