@@ -247,6 +247,87 @@ h1 {
     grid-column: span 2;
 }
 
+.calendar-float {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 350px;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 8px;
+}
+
+.calendar-highlight a {
+    background-color: #ffcc00 !important;
+    color: black !important;
+    border-radius: 50%;
+}
+
+.task-list-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: #333; /* Cor um pouco mais escura para o título */
+}
+
+/* Estilos para o contêiner da lista de tarefas */
+.task-list-container {
+    background-color: #f8f9fa; /* Um fundo suave para a lista */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-top: 1rem; /* Espaço acima da lista */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Estilos para cada item individual da tarefa */
+.task-list-item {
+    display: flex;
+    align-items: baseline; /* Alinha o texto base */
+    padding: 0.4rem 0;
+    border-bottom: 1px dashed #f0f0f0; /* Linha tracejada suave entre os itens */
+    font-size: 0.95rem;
+    color: #4a4a4a;
+}
+
+.task-list-item:last-child {
+    border-bottom: none; /* Remove a borda do último item */
+}
+
+/* Estilos para o título da tarefa */
+.task-list-item .task-title {
+    font-weight: 500;
+    color: #333;
+    margin-right: 0.3rem; /* Espaço após o título */
+}
+
+/* Estilos para o separador */
+.task-list-item .task-separator {
+    color: #888;
+    margin-right: 0.3rem;
+}
+
+/* Estilos para o responsável */
+.task-list-item .task-assignee {
+    font-style: italic;
+    color: #666;
+    margin-left: 0.3rem;
+}
+
+.calendar-widget-panel {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    z-index: 1000;
+    background: #fff;
+    padding: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
 /*   Ajustes/sobrescritas para classes de bibliotecas (ex: PrimeReact)  */
 
 body .ui-button {

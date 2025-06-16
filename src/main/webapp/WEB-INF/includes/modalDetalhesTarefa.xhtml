@@ -1,43 +1,44 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-<p:dialog id="detalhesDialog" header="Detalhes da Tarefa" widgetVar="detalhesModal" modal="true" resizable="false"
-          showEffect="fade" hideEffect="fade" responsive="true">
-    <p:outputPanel id="detalhesModalPanel" style="width:100%;" styleClass="dialog-content modal-detalhes-conteudo">
-        <h:panelGrid columns="2" cellpadding="5" style="width:100%;">
-            <h:outputText value="Número:"/>
-            <h:outputText value="#{tarefaController.tarefa.numero}"/>
+    <p:dialog id="detalhesDialog" header="Detalhes da Tarefa" widgetVar="detalhesModal" modal="true" resizable="false"
+              showEffect="fade" hideEffect="fade" style="width: 600px;">
+        <h:form id="detalhesForm">
+            <p:outputPanel id="detalhesModalPanel" style="width:100%;" styleClass="dialog-content modal-detalhes-conteudo">
+                <h:panelGrid columns="2" cellpadding="5" style="width:100%;">
+                    <h:outputText value="Número:"/>
+                    <h:outputText value="#{tarefaController.tarefa.numero}"/>
 
-            <h:outputText value="Título:"/>
-            <h:outputText value="#{tarefaController.tarefa.titulo}"/>
+                    <h:outputText value="Título:"/>
+                    <h:outputText value="#{tarefaController.tarefa.titulo}"/>
 
-            <h:outputText value="Descrição:"/>
-            <h:outputText value="#{tarefaController.tarefa.descricao}"/>
+                    <h:outputText value="Descrição:"/>
+                    <h:outputText value="#{tarefaController.tarefa.descricao}"/>
 
-            <h:outputText value="Responsável:"/>
-            <h:outputText value="#{tarefaController.tarefa.responsavel.nome}"/>
+                    <h:outputText value="Responsável:"/>
+                    <h:outputText value="#{tarefaController.tarefa.responsavel.nome}"/>
 
-            <h:outputText value="Prioridade:"/>
-            <h:outputText value="#{tarefaController.tarefa.prioridade}"/>
+                    <h:outputText value="Prioridade:"/>
+                    <h:outputText value="#{tarefaController.tarefa.prioridade}"/>
 
-            <h:outputText value="Deadline:"/>
-            <h:outputText value="#{tarefaController.tarefa.deadline}">
-                <f:converter converterId="localDateTimeConverter"/>
-                <f:attribute name="pattern" value="dd/MM/yyyy HH:mm"/>
-            </h:outputText>
+                    <h:outputText value="Deadline:"/>
+                    <h:outputText value="#{tarefaController.tarefa.deadline}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                    </h:outputText>
 
-            <h:outputText value="Situação:"/>
-            <h:outputText value="#{tarefaController.tarefa.situacao}"/>
-        </h:panelGrid>
-    </p:outputPanel>
+                    <h:outputText value="Situação:"/>
+                    <h:outputText value="#{tarefaController.tarefa.situacao}"/>
+                </h:panelGrid>
+            </p:outputPanel>
 
-    <f:facet name="footer">
-        <p:commandButton value="Fechar" type="button" onclick="PF('detalhesModal').hide()"
-                         styleClass="btn btn-secondary"/>
-    </f:facet>
-</p:dialog>
-</html>
+            <f:facet name="footer">
+                <p:commandButton value="Fechar" type="button" onclick="PF('detalhesModal').hide()"
+                                 styleClass="btn btn-secondary"/>
+            </f:facet>
+        </h:form>
+    </p:dialog>
+
+</ui:composition>

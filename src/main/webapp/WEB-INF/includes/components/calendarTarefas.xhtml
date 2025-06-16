@@ -1,0 +1,143 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:outputStylesheet library="css" name="style.css"/>
+
+    <style>
+        .ui-calendar.ui-calendar-inline {
+            width: 280px;
+        }
+
+        .ui-calendar {
+            height: auto;
+        }
+
+        .ui-datepicker table {
+            font-size: 0.9em;
+        }
+
+        .ui-datepicker td.calendar-highlight a::after {
+            content: "";
+            display: block;
+            width: 6px;
+            height: 6px;
+            margin: auto;
+            margin-top: 4px;
+            border-radius: 50%;
+            background: red;
+        }
+    </style>
+
+    <p:dialog widgetVar="dlgAgenda" header="Deadlines" modal="true" resizable="false" draggable="true"
+              closable="true" closeOnEscape="true" style="width:320px;">
+        <h:form id="agendaForm">
+            <p:calendar id="miniCalendar"
+                        widgetVar="miniCal"
+                        value="#{agendaController.dataSelecionada}"
+                        locale="pt"
+                        pattern="dd/MM/yyyy"
+                        effect="fade">
+                <p:ajax event="dateSelect"
+                        listener="#{agendaController.onDataSelecionada}"
+                        update=":agendaForm:tarefasDoDiaPanel"/>
+            </p:calendar>
+
+            <h:panelGroup id="tarefasDoDiaPanel" layout="block" style="margin-top: 1em;">
+                <h3>
+                    Tarefas para o dia
+                    <h:outputText value="#{agendaController.dataSelecionadaComoDate}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </h3>
+                <div class="task-list-container">
+                    <h:outputText
+                            rendered="#{empty agendaController.tarefasSelecionadas}"
+                            value="Nenhuma tarefa para o dia selecionado."
+                            styleClass="task-list-item"
+                            escape="true"/>
+                    <h:panelGroup rendered="#{not empty agendaController.tarefasSelecionadas}" layout="block">
+                        <ui:repeat value="#{agendaController.tarefasSelecionadas}" var="t">
+                            <div class="task-list-item">
+                                <h:outputText value="#{t.titulo}" styleClass="task-title" escape="true"/>
+                                <span class="task-separator"> - </span>
+                                Para:
+                                <h:outputText value="#{t.responsavel.nome}" styleClass="task-assignee" escape="true"/>
+                            </div>
+                        </ui:repeat>
+                    </h:panelGroup>
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </p:dialog>
+
+    <h:outputScript rendered="#{not empty agendaController.datasComDeadlineJson}" escape="false" target="body">
+        //<![CDATA[
+        (function() {
+            let diasComDeadline = #{agendaController.datasComDeadlineJson};
+
+            try {
+                if (typeof diasComDeadline === 'string') {
+                    diasComDeadline = JSON.parse(diasComDeadline);
+                }
+            } catch (e) {
+                console.error("Erro ao parsear JSON", e);
+                diasComDeadline = [];
+            }
+
+            function highlightDeadlines() {
+                const cal = PF('miniCal');
+                if (!cal || !cal.jq) return;
+
+                const dias = diasComDeadline || [];
+                const cells = cal.jq.find("td[data-handler='selectDay']");
+
+                cells.each(function () {
+                    const cell = $(this);
+                    const dayText = cell.text();
+
+                    const year = cell.data("year");
+                    const month = cell.data("month");
+                    const day = parseInt(dayText);
+
+                    if (isNaN(year) || isNaN(month) || isNaN(day)) return;
+
+                    const date = new Date(year, month, day);
+                    if (isNaN(date.getTime())) return;
+
+                    const formatted = date.toISOString().split('T')[0];
+
+                    cell.removeClass("calendar-highlight");
+                    cell.find(".highlight-dot").remove();
+
+                    if (dias.indexOf(formatted) !== -1) {
+                        cell.addClass("calendar-highlight");
+                    }
+                });
+            }
+
+            let observer = null;
+            function ativarObserverCalendario() {
+                const cal = PF('miniCal');
+                if (!cal || !cal.jq) return;
+
+                if(observer) observer.disconnect();
+
+                observer = new MutationObserver(function () {
+                    highlightDeadlines();
+                });
+
+                observer.observe(cal.jq[0], { childList: true, subtree: true });
+            }
+
+            setTimeout(() => {
+                highlightDeadlines();
+                ativarObserverCalendario();
+            }, 300);
+        })();
+        //]]>
+    </h:outputScript>
+
+</ui:composition>

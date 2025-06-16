@@ -122,4 +122,15 @@ public class TarefaDAO implements Serializable {
             em.close();
         }
     }
+
+    public List<Tarefa> buscarTarefasComDeadline() {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            return em.createQuery(
+                            "SELECT t FROM Tarefa t LEFT JOIN FETCH t.responsavel WHERE t.deadline IS NOT NULL", Tarefa.class)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

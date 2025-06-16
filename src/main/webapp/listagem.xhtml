@@ -19,20 +19,21 @@
         <h:form id="formFiltro">
 
             <!-- Seção de Filtros -->
-            <div class="filter-grid">
+            <h:panelGroup layout="block" styleClass="filter-grid">
+
                 <!-- Linha 1: Número -->
-                <h:outputLabel for="numero" value="Número:" styleClass="label"/>
-                <h:inputText id="numero" value="#{tarefaController.filtroNumero}" styleClass="form-control"/>
+                <h:outputLabel for="numero" value="Número:" styleClass="label" />
+                <h:inputText id="numero" value="#{tarefaController.filtroNumero}" styleClass="form-control" />
 
                 <!-- Linha 2: Título/Descrição -->
-                <h:outputLabel for="tituloDescricao" value="Título/Descrição:" styleClass="label"/>
-                <h:inputText id="tituloDescricao" value="#{tarefaController.filtroTituloDescricao}"
-                             styleClass="form-control"/>
+                <h:outputLabel for="tituloDescricao" value="Título/Descrição:" styleClass="label" />
+                <h:inputText id="tituloDescricao" value="#{tarefaController.filtroTituloDescricao}" styleClass="form-control" />
 
                 <!-- Linha 3: Responsável e Situação -->
-                <div class="input-group">
-                    <div class="input-field">
-                        <h:outputLabel for="responsavel" value="Responsável:" styleClass="label"/>
+                <h:panelGroup layout="block" styleClass="input-group">
+
+                    <h:panelGroup layout="block" styleClass="input-field">
+                        <h:outputLabel for="responsavel" value="Responsável:" styleClass="label" />
                         <p:autoComplete id="responsavel"
                                         value="#{tarefaController.filtroResponsavel}"
                                         completeMethod="#{colaboradorController.buscarColaboradores}" var="colab"
@@ -40,33 +41,30 @@
                                         itemValue="#{colab}"
                                         converter="colaboradorConverter"
                                         forceSelection="false" dropdown="true" minQueryLength="0" queryDelay="300"
-                                        placeholder="Digite para buscar ou selecione"
-                        />
-                    </div>
+                                        placeholder="Digite para buscar ou selecione" />
+                    </h:panelGroup>
 
-                    <div class="input-field input-select">
-                        <h:outputLabel for="situacao" value="Situação:" styleClass="label"/>
-                        <p:selectOneMenu id="situacao" value="#{tarefaController.filtroSituacao}"
-                                         styleClass="form-control"
-                                         converter="omnifaces.SelectItemsConverter">
-                            <f:selectItem itemLabel="Todas" itemValue=""/>
-                            <f:selectItem itemLabel="Em andamento" itemValue="EM_ANDAMENTO"/>
-                            <f:selectItem itemLabel="Concluída" itemValue="CONCLUIDA"/>
+                    <h:panelGroup layout="block" styleClass="input-field input-select">
+                        <h:outputLabel for="situacao" value="Situação:" styleClass="label" />
+                        <p:selectOneMenu id="situacao" value="#{tarefaController.filtroSituacao}" styleClass="form-control">
+                            <f:selectItem itemLabel="Todas" itemValue="" />
+                            <f:selectItem itemLabel="Em andamento" itemValue="EM_ANDAMENTO" />
+                            <f:selectItem itemLabel="Concluída" itemValue="CONCLUIDA" />
                         </p:selectOneMenu>
-                    </div>
-                </div>
+                    </h:panelGroup>
+
+                </h:panelGroup>
 
                 <!-- Linha 4: Botões -->
-                <div class="button-group">
-                    <h:commandButton value="Buscar Tarefas" action="#{tarefaController.filtrar}"
-                                     styleClass="btn btn-primary"/>
-                    <h:commandButton value="Cadastrar Nova Tarefa" action="#{tarefaController.navegarParaCadastro}"
-                                     styleClass="btn btn-secondary"/>
-                </div>
+                <h:panelGroup layout="block" styleClass="button-group">
+                    <h:commandButton value="Buscar Tarefas" action="#{tarefaController.filtrar}" styleClass="btn btn-primary" />
+                    <h:commandButton value="Cadastrar Nova Tarefa" action="#{tarefaController.navegarParaCadastro}" styleClass="btn btn-secondary" />
+<!--                    <p:commandButton icon="pi pi-calendar" value="Agenda" type="button" onclick="PF('dlgAgenda').show();" styleClass="btn btn-info" />-->
+                </h:panelGroup>
 
-                <p:messages id="feedbackMessages" showDetail="true" showSummary="false" autoUpdate="true"
-                            closable="true"/>
-            </div>
+                <p:messages id="feedbackMessages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" />
+
+            </h:panelGroup>
 
             <!-- Tabela de Dados com paginação -->
             <p:dataTable value="#{tarefaController.tarefas}" var="tarefa" paginator="true" rows="10"
@@ -74,44 +72,48 @@
                          selectionMode="single"
                          rowKey="#{tarefa.numero}"
                          selection="#{tarefaController.tarefaSelecionada}">
-                <p:ajax event="rowSelect"
-                        listener="#{tarefaController.onRowSelect}"
-                        update="@form @(.modal-detalhes-conteudo)" oncomplete="PF('detalhesModal').show();"/>
+
+                <p:ajax event="rowSelect" listener="#{tarefaController.onRowSelect}" update="@form @(.modal-detalhes-conteudo)" oncomplete="PF('detalhesModal').show();" />
 
                 <p:column headerText="Número">
-                    <h:outputText value="#{tarefa.numero}"/>
+                    <h:outputText value="#{tarefa.numero}" />
                 </p:column>
 
                 <p:column headerText="Título">
-                    <h:outputText value="#{tarefa.titulo}"/>
+                    <h:outputText value="#{tarefa.titulo}" />
                 </p:column>
 
                 <p:column headerText="Responsável">
-                    <h:outputText value="#{tarefa.responsavel.nome}"/>
+                    <h:outputText value="#{tarefa.responsavel.nome}" />
                 </p:column>
 
                 <p:column headerText="Ações" styleClass="actions-column">
-                    <h:outputLink value="cadastro_tarefas.xhtml?id=#{tarefa.numero}"
-                                  styleClass="action-link">Editar</h:outputLink>
-                    <h:outputText value=" | " styleClass="action-separator"/>
+                    <h:outputLink value="cadastro_tarefas.xhtml?id=#{tarefa.numero}" styleClass="action-link">Editar</h:outputLink>
+                    <h:outputText value=" | " styleClass="action-separator" />
                     <h:commandLink value="Excluir" styleClass="action-link" action="#{tarefaController.excluir}"
                                    onclick="return confirm('Confirma a exclusão da tarefa?');">
-                        <f:setPropertyActionListener target="#{tarefaController.idTarefa}" value="#{tarefa.numero}"/>
+                        <f:setPropertyActionListener target="#{tarefaController.idTarefa}" value="#{tarefa.numero}" />
                     </h:commandLink>
-                    <h:outputText value=" | " styleClass="action-separator"
-                                  rendered="#{tarefa.situacao == 'EM_ANDAMENTO'}"/>
+                    <h:outputText value=" | " styleClass="action-separator" rendered="#{tarefa.situacao == 'EM_ANDAMENTO'}" />
                     <h:commandLink value="Concluir" styleClass="action-link" action="#{tarefaController.concluir}"
                                    rendered="#{tarefa.situacao == 'EM_ANDAMENTO'}"
                                    onclick="return confirm('Confirma a conclusão da tarefa?');">
-                        <f:setPropertyActionListener target="#{tarefaController.idTarefa}" value="#{tarefa.numero}"/>
+                        <f:setPropertyActionListener target="#{tarefaController.idTarefa}" value="#{tarefa.numero}" />
                     </h:commandLink>
                 </p:column>
 
             </p:dataTable>
 
+<!--            <div id="calendarWrapper" style="display:none;">-->
+<!--                <ui:include src="/WEB-INF/includes/components/calendarTarefas.xhtml" />-->
+<!--            </div>-->
+
+            <ui:include src="/WEB-INF/includes/modalDetalhesTarefa.xhtml" />
+
         </h:form>
 
-        <ui:include src="/WEB-INF/includes/modalDetalhesTarefa.xhtml"/>
+
     </div>
+
 </h:body>
 </html>
