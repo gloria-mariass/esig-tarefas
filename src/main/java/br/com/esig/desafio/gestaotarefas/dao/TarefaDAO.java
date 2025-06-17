@@ -17,19 +17,15 @@ public class TarefaDAO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public void salvar(Tarefa tarefa) {
-//        if (tarefa.getDeadline() != null) {
-//            tarefa.setDeadline(
-//                    tarefa.getDeadline()
-//                            .withHour(12)
-//                            .withMinute(0)
-//                            .withSecond(0)
-//                            .withNano(0)
-//            );
-//        }
-
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
+
+            Colaborador responsavel = tarefa.getResponsavel();
+            if (responsavel != null && responsavel.getId() == null) {
+                em.persist(responsavel);
+            }
+
             em.merge(tarefa);
             em.getTransaction().commit();
         } catch (Exception e) {

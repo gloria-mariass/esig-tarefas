@@ -25,7 +25,7 @@ public class Tarefa implements Serializable {
     @Column(length = 1000)
     private String descricao;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "responsavel_id", nullable = false)
     private Colaborador responsavel;
 
